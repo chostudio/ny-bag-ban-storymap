@@ -1,0 +1,558 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Bagged by the Rules</title>
+<meta name="description" content="A StoryMap on how formal and informal institutions shape bag use under New York State's plastic bag ban.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
+<style>
+:root{
+  --bg:#f7f4ee; --surface:#ffffff; --ink:#1d1d1b; --muted:#5d5a54; --line:#e2ddd3;
+  --formal:#2f7fd6; --formal-bg:#dbeafe; --informal:#16a34a; --informal-bg:#dcfce7;
+  --behav:#d97706; --behav-bg:#fef3c7; --loop:#7c3aed; --loop-bg:#ede9fe; --conflict:#dc2626;
+  --accent:#0f5132; --shadow:0 1px 2px rgba(0,0,0,.04),0 8px 24px rgba(0,0,0,.06);
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#141412; --surface:#1e1e1b; --ink:#ecebe6; --muted:#a9a69e; --line:#34332f;
+    --formal:#6aa8f0; --formal-bg:#1b2c44; --informal:#4ade80; --informal-bg:#173323;
+    --behav:#fbbf24; --behav-bg:#3a2e12; --loop:#a78bfa; --loop-bg:#2c2347; --conflict:#f87171;
+    --accent:#86efac; --shadow:none;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#141412; --surface:#1e1e1b; --ink:#ecebe6; --muted:#a9a69e; --line:#34332f;
+  --formal:#6aa8f0; --formal-bg:#1b2c44; --informal:#4ade80; --informal-bg:#173323;
+  --behav:#fbbf24; --behav-bg:#3a2e12; --loop:#a78bfa; --loop-bg:#2c2347; --conflict:#f87171;
+  --accent:#86efac; --shadow:none;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--ink);font:17px/1.65 Inter,system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+h1,h2,h3{font-family:Fraunces,Georgia,serif;line-height:1.15;margin:0 0 .5em;font-weight:700}
+h2{font-size:clamp(28px,4.5vw,42px)}
+h3{font-size:22px;font-weight:500}
+p{margin:0 0 1em}
+a{color:inherit;text-decoration-color:var(--muted);text-underline-offset:3px}
+.wrap{max-width:760px;margin:0 auto;padding:0 16px}
+.wide{max-width:1120px;margin:0 auto;padding:0 16px}
+figure{margin:32px 0}
+figcaption{font-size:14px;color:var(--muted);margin-top:10px;line-height:1.5}
+figcaption .credit{display:block;font-size:12.5px;margin-top:4px}
+img{max-width:100%;display:block;border-radius:10px}
+
+/* nav */
+nav.top{position:sticky;top:0;z-index:1000;background:color-mix(in srgb,var(--bg) 88%,transparent);backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
+nav.top .wide{display:flex;gap:6px;align-items:center;height:52px;overflow-x:auto;scrollbar-width:none}
+nav.top a{font-size:14px;font-weight:500;text-decoration:none;color:var(--muted);padding:6px 10px;border-radius:99px;white-space:nowrap}
+nav.top a.on{background:var(--ink);color:var(--bg)}
+nav.top .brand{font-family:Fraunces,serif;font-weight:700;color:var(--ink);margin-right:auto;padding-left:0}
+
+/* hero */
+.hero{position:relative;min-height:min(88vh,760px);display:flex;align-items:flex-end;color:#fff;overflow:hidden}
+.hero img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;border-radius:0}
+.hero::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,.05) 30%,rgba(0,0,0,.78))}
+.hero .wrap{position:relative;z-index:1;padding-bottom:56px}
+.hero .kicker{text-transform:uppercase;letter-spacing:.14em;font-size:13px;font-weight:600;opacity:.9}
+.hero h1{font-size:clamp(40px,8vw,76px);margin:10px 0 14px}
+.hero p.lede{font-size:clamp(18px,2.4vw,21px);max-width:620px;opacity:.95}
+.hero .credit{font-size:12px;opacity:.75;margin-top:24px}
+.hero .credit a{color:#fff}
+
+section{padding:72px 0 24px}
+.secnum{font-size:13px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);margin-bottom:8px}
+.rq{border-left:4px solid var(--accent);background:var(--surface);padding:20px 22px;border-radius:0 12px 12px 0;box-shadow:var(--shadow);margin:28px 0}
+.rq b{display:block;font-size:13px;letter-spacing:.12em;text-transform:uppercase;color:var(--accent);margin-bottom:6px}
+.rq p{font-family:Fraunces,serif;font-size:21px;line-height:1.4;margin:0}
+.facts{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:12px;margin:28px 0}
+.fact{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:16px}
+.fact .n{font-family:Fraunces,serif;font-size:34px;font-weight:700;line-height:1}
+.fact .l{font-size:14px;color:var(--muted);margin-top:6px;line-height:1.4}
+
+.card{background:var(--surface);border:1px solid var(--line);border-radius:14px;box-shadow:var(--shadow);padding:18px}
+#map{height:460px;border-radius:12px;z-index:1}
+.legend-row{display:flex;flex-wrap:wrap;gap:14px;font-size:13.5px;color:var(--muted);margin-top:10px}
+.dot{display:inline-block;width:11px;height:11px;border-radius:50%;margin-right:6px;vertical-align:-1px}
+
+/* concept map */
+.cmap-wrap{display:grid;grid-template-columns:1fr 270px;gap:18px;align-items:start}
+.cmap{width:100%;height:auto;display:block;background:#fff;border-radius:10px;padding:8px}
+.cmap .nt{fill:#1e1e1e;font-family:Inter,sans-serif;font-weight:500}
+.cmap .el{fill:#1e1e1e;font-family:Inter,sans-serif}
+.cmap .lblbg{fill:#fff}
+.cmap .edge{opacity:.9}
+.cmap .node{cursor:pointer;transition:opacity .2s}
+.cmap .node:focus{outline:none}
+.cmap .node:focus rect,.cmap .node.sel rect{stroke-width:5}
+.cmap.dim .node:not(.sel){opacity:.35}
+.callout{position:sticky;top:72px}
+.swipe{display:none;font-size:13px;color:var(--muted);margin-top:6px;position:sticky;left:0}
+.callout .tag{display:inline-block;font-size:12px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;padding:3px 8px;border-radius:6px;margin-bottom:10px}
+.callout h3{font-size:20px;margin-bottom:8px}
+.callout p{font-size:15px;line-height:1.55}
+.callout .hint{color:var(--muted);font-size:14px}
+.t-formal{background:var(--formal-bg);color:var(--formal)}
+.t-informal{background:var(--informal-bg);color:var(--informal)}
+.t-behav{background:var(--behav-bg);color:var(--behav)}
+.t-loop{background:var(--loop-bg);color:var(--loop)}
+
+.two{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin:28px 0}
+.inst{border-radius:14px;padding:20px;border:1px solid var(--line);background:var(--surface)}
+.inst h3{font-size:19px;display:flex;align-items:center;gap:8px}
+.inst ul{margin:0;padding-left:20px;font-size:15.5px}
+.inst li{margin-bottom:8px}
+.inst.formal{border-top:5px solid var(--formal)}
+.inst.informal{border-top:5px solid var(--informal)}
+
+/* timeline */
+.tl{position:relative;margin:24px 0;padding-left:28px}
+.tl::before{content:"";position:absolute;left:8px;top:6px;bottom:6px;width:2px;background:var(--line)}
+.tl .ev{position:relative;margin-bottom:20px}
+.tl .ev::before{content:"";position:absolute;left:-26px;top:6px;width:14px;height:14px;border-radius:50%;background:var(--surface);border:3px solid var(--formal)}
+.tl .ev.inf::before{border-color:var(--informal)}
+.tl .ev.con::before{border-color:var(--conflict)}
+.tl .d{font-size:13px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+.tl .ev p{margin:2px 0 0;font-size:15.5px}
+
+/* actors */
+.actors{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px;margin:24px 0}
+.actor{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:16px;border-left:5px solid var(--formal)}
+.actor.i{border-left-color:var(--informal)} .actor.b{border-left-color:var(--behav)}
+.actor h4{margin:0 0 4px;font-size:16px}
+.actor .role{font-size:12px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);font-weight:600}
+.actor p{font-size:14.5px;margin:8px 0 0;line-height:1.5}
+
+/* charts */
+.chart h4{margin:0 0 4px;font-size:16px}
+.chart .sub{font-size:13.5px;color:var(--muted);margin-bottom:16px}
+.bar-row{display:grid;grid-template-columns:150px 1fr 54px;gap:10px;align-items:center;margin-bottom:10px;font-size:14.5px}
+.bar{height:26px;background:var(--line);border-radius:6px;overflow:hidden}
+.bar span{display:block;height:100%;border-radius:6px;background:var(--formal);width:0;transition:width 1.1s cubic-bezier(.2,.7,.2,1)}
+.bar-row .v{font-variant-numeric:tabular-nums;font-weight:600;text-align:right}
+.split{display:flex;height:54px;border-radius:10px;overflow:hidden;font-weight:600;font-size:14px;color:#fff}
+.split div{display:flex;align-items:center;justify-content:center;text-align:center;line-height:1.25;padding:0 8px}
+
+.tension{border-radius:14px;padding:22px;margin:24px 0;background:var(--surface);border:1px solid var(--line)}
+.tension .tag{font-size:12px;font-weight:700;letter-spacing:.12em;text-transform:uppercase}
+.tension h3{margin:6px 0 10px}
+.loop svg{width:100%;height:auto;display:block}
+.loop svg text{font-family:Inter,sans-serif;fill:var(--ink)}
+
+.reflect{font-family:Fraunces,serif;font-size:19px;line-height:1.7}
+.reflect p{margin-bottom:1.1em}
+.wc{font-size:13px;color:var(--muted);font-family:Inter,sans-serif}
+.lev{display:grid;gap:10px;margin:20px 0}
+.lev div{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:14px 16px;font-size:15.5px}
+.lev b{color:var(--accent)}
+
+ol.refs{font-size:14px;color:var(--muted);padding-left:20px}
+ol.refs li{margin-bottom:8px;overflow-wrap:anywhere}
+footer{padding:40px 0 60px;font-size:13px;color:var(--muted);border-top:1px solid var(--line);margin-top:40px}
+
+.reveal{opacity:0;transform:translateY(18px);transition:opacity .7s,transform .7s}
+.reveal.in{opacity:1;transform:none}
+@media (prefers-reduced-motion: reduce){.reveal{opacity:1;transform:none;transition:none}.bar span{transition:none}html{scroll-behavior:auto}}
+
+@media (max-width:860px){
+  .cmap-wrap{grid-template-columns:1fr}
+  .callout{position:static}
+  .two{grid-template-columns:1fr}
+  .bar-row{grid-template-columns:110px 1fr 44px;font-size:13.5px}
+  #map{height:380px}
+  .hscroll{overflow-x:auto;-webkit-overflow-scrolling:touch}
+  .hscroll .cmap{min-width:760px}
+  .hscroll > svg{min-width:600px}
+  .swipe{display:block}
+}
+</style>
+</head>
+<body>
+
+<nav class="top" aria-label="Sections">
+  <div class="wide">
+    <a class="brand" href="#top">Bagged by the Rules</a>
+    <a href="#intro">1 · Introduction</a>
+    <a href="#mapping">2 · Mapping Institutions</a>
+    <a href="#action">3 · In Action</a>
+    <a href="#reflection">4 · Reflection</a>
+    <a href="#sources">Sources</a>
+  </div>
+</nav>
+
+<header class="hero" id="top">
+  <img src="assets/litter.jpg" alt="Dozens of torn plastic bags snagged in bare shrubs along a riverbank above green water.">
+  <div class="wrap">
+    <div class="kicker">StoryMap · Institutions and Human Behavior</div>
+    <h1>Bagged by the Rules</h1>
+    <p class="lede">New York banned plastic checkout bags in 2020. Whether a bag actually ends up in a tree depends on more than the law: a fine, a 5¢ fee, a bodega owner's margins, and a shopper's habits all decide what happens at the register.</p>
+    <p style="font-size:14px;opacity:.85">Chris Ho · Oregon State University · Activity 1.3</p>
+    <div class="credit">Photo: Plastic bags caught along a riverbank (illustrative, not in New York). <a href="https://commons.wikimedia.org/wiki/File:Plastic_bag-Litter-001.jpg">NJR ZA, Wikimedia Commons</a>, <a href="https://creativecommons.org/licenses/by-sa/3.0">CC BY-SA 3.0</a>.</div>
+  </div>
+</header>
+
+<!-- ============ SECTION 1 ============ -->
+<section id="intro">
+  <div class="wrap reveal">
+    <div class="secnum">Section 1 · Introduction</div>
+    <h2>One state, 23 billion bags, one new rule</h2>
+    <p>Before 2020, New Yorkers used more than <b>23 billion plastic bags a year</b> (NYS DEC). Bags clog storm drains, tangle in trees and waterways, and jam the sorting machines at recycling plants. In 2019 the state legislature passed the <b>Bag Waste Reduction Act</b>, which banned most single-use plastic carryout bags starting March 1, 2020. It also let each county and city decide whether to add a <b>5¢ fee on paper bags</b>.</p>
+    <p>This case is a good example of institutional influence because the same formal rule landed very differently depending on the informal rules around it. A supermarket chain with a compliance department switched almost overnight. A corner bodega facing paper bags that cost roughly eight times more per bag kept handing out plastic. A shopper who already carried a tote barely noticed the change. The environmental outcome, fewer bags overall but uneven compliance, comes from the interaction between laws, enforcement capacity, business economics and everyday habit.</p>
+
+    <div class="facts">
+      <div class="fact"><div class="n">23B+</div><div class="l">plastic bags used in NY each year before the ban</div></div>
+      <div class="fact"><div class="n">7</div><div class="l">counties or cities that opted into the 5¢ paper-bag fee (state list, 2021)</div></div>
+      <div class="fact"><div class="n">$250</div><div class="l">fine for a first violation after a written warning; $500 for repeats</div></div>
+      <div class="fact"><div class="n">85%</div><div class="l">of New Yorkers say they usually bring a reusable bag (2025 survey cited by DEC)</div></div>
+    </div>
+
+    <div class="rq">
+      <b>Research question</b>
+      <p>How do New York's formal bag rules and the informal norms of shoppers and small-business owners interact to decide whether single-use bag use actually falls?</p>
+    </div>
+  </div>
+
+  <div class="wide reveal">
+    <figure class="card">
+      <div id="map" role="region" aria-label="Interactive map of New York jurisdictions with a 5 cent paper bag fee"></div>
+      <div class="legend-row">
+        <span><i class="dot" style="background:#16a34a"></i>Opted in to 5¢ paper-bag fee</span>
+        <span><i class="dot" style="background:#9ca3af"></i>Example opt-outs</span>
+        <span><i class="dot" style="background:#2f7fd6"></i>State government (Albany)</span>
+      </div>
+      <figcaption><b>Figure 1. Where the 5¢ fee applies.</b> The ban is statewide, but the paper-bag fee is a local option, so the rules a shopper faces change at the county line. Click a marker for details. Nassau County, next door to fee-charging Suffolk and NYC, chose not to charge.
+        <span class="credit">Data: NYS Dept. of Taxation and Finance, Publication 718-B (rev. 11/2021); Nassau and Oneida opt-outs from NYS DEC and CNY Business Journal. Basemap © OpenStreetMap contributors.</span></figcaption>
+    </figure>
+  </div>
+
+  <div class="wrap reveal">
+    <h3>How the rule came to be</h3>
+    <div class="tl">
+      <div class="ev con"><div class="d">Feb 14, 2017</div><p>Governor Cuomo signs a bill <b>blocking New York City's own 5¢ bag fee</b> one day before it starts, calling it "deeply flawed." State preemption overrides local home rule.</p></div>
+      <div class="ev"><div class="d">Mar 2017</div><p>Cuomo creates the <b>NYS Plastic Bag Task Force</b>, chaired by DEC Commissioner Basil Seggos, to study statewide options.</p></div>
+      <div class="ev"><div class="d">Apr 2019</div><p>The legislature passes the <b>Bag Waste Reduction Act</b> in the state budget. Counties and cities get to choose whether to charge 5¢ for paper.</p></div>
+      <div class="ev"><div class="d">Mar 1, 2020</div><p>The ban takes effect, but a lawsuit by bag maker Poly-Pak and bodega groups <b>pauses enforcement</b>.</p></div>
+      <div class="ev"><div class="d">Oct 19, 2020</div><p>After Poly-Pak loses in Albany County Supreme Court, <b>DEC begins enforcing</b>.</p></div>
+      <div class="ev inf"><div class="d">2021 – 2023</div><p>Advocates (Beyond Plastics, NYPIRG) document hundreds of violating stores and send lists to DEC. Fines total about $75,000.</p></div>
+      <div class="ev inf"><div class="d">2025</div><p>A University at Buffalo survey cited by DEC finds 85% of residents usually bring a reusable bag.</p></div>
+    </div>
+    <figure>
+      <img src="assets/capitol.jpg" alt="The New York State Capitol in Albany, a large granite building with red-roofed towers, seen across a lawn." loading="lazy">
+      <figcaption><b>Figure 2. The New York State Capitol, Albany.</b> The legislature that preempted NYC's fee in 2017 is the same body that passed the statewide ban in 2019. The formal rule-maker changed its position, not just its scale.
+        <span class="credit">Photo: <a href="https://commons.wikimedia.org/wiki/File:2019_New_York_State_Capitol_northwest_facade,_Albany,_New_York.jpg">Beyond My Ken, Wikimedia Commons</a>, <a href="https://creativecommons.org/licenses/by-sa/4.0">CC BY-SA 4.0</a>.</span></figcaption>
+    </figure>
+  </div>
+</section>
+
+<!-- ============ SECTION 2 ============ -->
+<section id="mapping">
+  <div class="wrap reveal">
+    <div class="secnum">Section 2 · Mapping Institutions</div>
+    <h2>The rules on paper, and the rules in people's heads</h2>
+    <p>Institutions are the "rules of the game" that structure behavior. <b>Formal institutions</b> are written down and backed by an authority: laws, fines, fees. <b>Informal institutions</b> are unwritten but just as real: norms, habits, and the shared expectations of a business network. My concept map from Activity 1.1 places the formal rules on the left, informal ones on the right, and the behaviors they pull on in the middle.</p>
+  </div>
+  <div class="wide reveal">
+    <figure class="card">
+      <div class="cmap-wrap">
+        <div class="hscroll"><!--CONCEPT--><div class="swipe">Swipe sideways to see the whole map →</div></div>
+        <aside class="callout" aria-live="polite">
+          <div id="callout">
+            <span class="tag t-loop">Explore</span>
+            <h3>Click any box</h3>
+            <p class="hint">Select a box in the concept map (or tab to it and press Enter) to read how that institution shapes behavior or decision-making.</p>
+          </div>
+        </aside>
+      </div>
+      <figcaption><b>Figure 3. Concept map: Plastic Bag Ban in New York State</b> (revised from Activity 1.1). Blue = formal institution, green = informal institution, yellow = behavior, orange = outcome. Red dashed arrows show conflict; the purple dashed arrow is a feedback loop.
+        <span class="credit">Original diagram by the author, made in Excalidraw.</span></figcaption>
+    </figure>
+  </div>
+  <div class="wrap reveal">
+    <div class="two">
+      <div class="inst formal">
+        <h3><i class="dot" style="background:var(--formal)"></i>Formal institutions</h3>
+        <ul>
+          <li><b>Bag Waste Reduction Act (2020):</b> bans plastic carryout bags; sets the default for every store.</li>
+          <li><b>DEC enforcement:</b> warning first, then $250 and $500 fines. Changes the store's cost of non-compliance.</li>
+          <li><b>Local-option 5¢ paper fee:</b> makes shoppers pay at the moment of choice; SNAP and WIC users are exempt.</li>
+          <li><b>Fee revenue rule:</b> 3¢ to the state Environmental Protection Fund, 2¢ to the locality to buy reusable bags for low-income residents.</li>
+        </ul>
+      </div>
+      <div class="inst informal">
+        <h3><i class="dot" style="background:var(--informal)"></i>Informal institutions</h3>
+        <ul>
+          <li><b>"Bags should be free":</b> decades of free plastic made a free bag feel like part of the purchase.</li>
+          <li><b>Bodega and small-business networks:</b> owners share suppliers, prices and risk. When others keep plastic, so do you.</li>
+          <li><b>Reusable-bag habit and peer expectation:</b> once carrying a tote is normal, forgetting one feels awkward.</li>
+          <li><b>Advocate watchdogs:</b> volunteers who photograph violators and push DEC to act.</li>
+        </ul>
+      </div>
+    </div>
+    <figure>
+      <img src="assets/reusable-bag.jpg" alt="A navy blue non-woven reusable shopping bag standing open on a white background." loading="lazy" style="max-width:360px;margin:0 auto">
+      <figcaption style="text-align:center"><b>Figure 4. The reusable bag.</b> The informal habit the formal rules are trying to create. The 2¢ local share of each fee is earmarked to give these away.
+        <span class="credit">Photo: <a href="https://commons.wikimedia.org/wiki/File:Blue_reusable_shopping_bag.JPG">TooHotToHandle, Wikimedia Commons</a>, <a href="https://creativecommons.org/licenses/by-sa/3.0">CC BY-SA 3.0</a>.</span></figcaption>
+    </figure>
+    <figure class="card chart">
+      <h4>Figure 5. Where each 5¢ paper-bag fee goes</h4>
+      <div class="sub">The fee is a price signal for shoppers, and its revenue funds the reusable-bag habit.</div>
+      <div class="split" role="img" aria-label="3 cents (60 percent) to the NYS Environmental Protection Fund; 2 cents (40 percent) to the locality for reusable bags">
+        <div style="flex:3;background:#2f7fd6">3¢ · 60%<br>State Environmental Protection Fund</div>
+        <div style="flex:2;background:#16a34a">2¢ · 40%<br>Locality buys reusable bags</div>
+      </div>
+      <figcaption>Stores keep none of the fee, so it does nothing to offset their higher paper-bag costs (see Figure 7).
+        <span class="credit">Source: NY Environmental Conservation Law §27-2805; NYS DEC Bag Waste Reduction Law page. Chart by the author.</span></figcaption>
+    </figure>
+  </div>
+</section>
+
+<!-- ============ SECTION 3 ============ -->
+<section id="action">
+  <div class="wrap reveal">
+    <div class="secnum">Section 3 · Institutions in Action</div>
+    <h2>Who acts, and what pushes back</h2>
+    <p>Drawing on my annotated sources and stakeholder analysis (Activity 1.2), these are the actors who turn the rules into real outcomes. Blue edges mark formal rule-makers and enforcers, green marks informal or civil-society actors, and yellow marks the people whose daily choices the rules target.</p>
+    <div class="actors">
+      <div class="actor"><div class="role">Rule-maker</div><h4>NYS Legislature &amp; Governor</h4><p>Wrote the ban, the fine schedule and the local fee option. First blocked NYC's fee, then went statewide.</p></div>
+      <div class="actor"><div class="role">Enforcer</div><h4>NYS DEC</h4><p>Issues regulations, inspects stores, sends warnings and fines. Its capacity sets how credible the ban is.</p></div>
+      <div class="actor"><div class="role">Local government</div><h4>Counties &amp; cities</h4><p>Choose whether to charge 5¢; spend their 2¢ share on free reusable bags.</p></div>
+      <div class="actor i"><div class="role">Watchdog</div><h4>Beyond Plastics, NYPIRG, volunteers</h4><p>Track violators, file complaints, and lobby DEC and legislators. They are the "eyes" DEC lacks.</p></div>
+      <div class="actor i"><div class="role">Opposition</div><h4>Bodega &amp; Small Business Association</h4><p>Sued alongside Poly-Pak in 2020 and argues paper is unaffordable for thin-margin stores.</p></div>
+      <div class="actor b"><div class="role">Targeted behavior</div><h4>Supermarkets &amp; chains</h4><p>Most large chains complied quickly; Family Dollar became the biggest fine at $26,650.</p></div>
+      <div class="actor b"><div class="role">Targeted behavior</div><h4>Shoppers</h4><p>Bring a bag, pay 5¢, or ask for plastic. Small daily choices that add up to 23 billion.</p></div>
+    </div>
+    <figure>
+      <img src="assets/seggos.jpg" alt="Official portrait of Basil Seggos in a dark suit and red tie in front of U.S. and New York State flags." loading="lazy" style="max-width:220px">
+      <figcaption><b>Figure 6. Basil Seggos, DEC Commissioner (2015–2023).</b> He chaired the 2017 Plastic Bag Task Force and later announced the October 2020 enforcement start, so one formal actor shaped both the design and the enforcement of the rule.
+        <span class="credit">Photo: <a href="https://commons.wikimedia.org/wiki/File:New_York_State_DEC_Commissioner_Basil_Seggos.jpg">Jim Clayton, Wikimedia Commons</a>, <a href="https://creativecommons.org/licenses/by-sa/4.0">CC BY-SA 4.0</a>.</span></figcaption>
+    </figure>
+
+    <div class="tension">
+      <div class="tag" style="color:var(--conflict)">Tension 1 · Formal ban vs. informal small-business economics</div>
+      <h3>When the rule costs more than the fine</h3>
+      <p>The ban assumes stores will switch to paper. For a bodega, that switch is expensive. The Bodega and Small Business Association reported a box of 400 paper bags costs $50–55, while a box of more than twice as many plastic bags costs about $12. Since the 5¢ fee goes to the government rather than the store, nothing offsets the difference. Paired with rare inspections, the informal calculation inside bodega networks became "keep the plastic and risk the fine." In 2020 the association's founder said: <i>"We are taking the chance on giving out plastic bags, risking getting a fine, because paper bags are too expensive."</i></p>
+    </div>
+    <figure class="card chart">
+      <h4>Figure 7. Cost to the store, per bag</h4>
+      <div class="sub">Approximate wholesale prices reported by small-business owners, 2022</div>
+      <div class="bars" data-max="13.1">
+        <div class="bar-row"><span>Paper bag</span><div class="bar"><span data-v="13.1" style="background:var(--behav)"></span></div><span class="v">~13¢</span></div>
+        <div class="bar-row"><span>Plastic bag</span><div class="bar"><span data-v="1.5" style="background:#9ca3af"></span></div><span class="v">≤1.5¢</span></div>
+      </div>
+      <figcaption>Paper: $50–55 per box of 400 (midpoint $52.50). Plastic: about $12 for a box of 800 or more. A store handing out 200 bags a day would pay about $23 more per day for paper.
+        <span class="credit">Source: City Limits (2022), quoting Francisco Marte, Bodega and Small Business Association. Chart by the author.</span></figcaption>
+    </figure>
+    <figure>
+      <img src="assets/bodega.jpg" alt="Inside a Manhattan bodega: shelves of groceries, a stack of bottled water cases, a black plastic trash bag, and an orange cat." loading="lazy">
+      <figcaption><b>Figure 8. A bodega in East Harlem, Manhattan.</b> Small stores like this one operate on thin margins and rely on peer networks for suppliers and norms, which is where the informal resistance to the ban concentrated.
+        <span class="credit">Photo: <a href="https://commons.wikimedia.org/wiki/File:Bodega_cat_at_Heavenly_Market_IV,_1760_3rd_Avenue,_2024-06-27,_East_Harlem,_Manhattan,_New_York_04.jpg">Deans Charbal, Wikimedia Commons</a>, <a href="https://creativecommons.org/licenses/by-sa/4.0">CC BY-SA 4.0</a>.</span></figcaption>
+    </figure>
+
+    <div class="tension">
+      <div class="tag" style="color:var(--loop)">Feedback loop · Enforcement depends on complaints</div>
+      <h3>A balancing loop that runs slowly</h3>
+      <p>DEC did not inspect stores at random at any large scale. By late September 2022 it had made 425 store visits statewide, roughly four a week, while losing staff over the previous decade. In practice, enforcement was driven by complaints: advocates spotted plastic, reported it, and DEC followed up. That makes a <b>balancing feedback loop</b>. More violations lead to more complaints, which lead to more enforcement, which lead to fewer violations. The loop works (Gristedes stopped after DEC referred complaints to the Attorney General), but it is only as fast as volunteer attention and agency capacity allow. Outside NYC, where compliance was already better, the loop barely needs to run.</p>
+    </div>
+    <figure class="card loop"><div class="hscroll">
+      <svg viewBox="0 0 720 360" role="img" aria-labelledby="loop-t loop-d">
+        <title id="loop-t">Balancing feedback loop of bag-ban enforcement</title>
+        <desc id="loop-d">Plastic bags still handed out increases advocate complaints, which increase DEC inspections and fines, which raise the expected cost of violating, which reduces plastic bags handed out. DEC staff capacity limits inspections; paper-bag cost pushes plastic use up.</desc>
+        <defs>
+          <marker id="la" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#7c3aed"/></marker>
+          <marker id="lr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#dc2626"/></marker>
+        </defs>
+        <g font-size="15" font-weight="600">
+          <rect x="250" y="20" width="220" height="56" rx="12" fill="#fef3c7" stroke="#d97706" stroke-width="2"/>
+          <text x="360" y="44" text-anchor="middle" style="fill:#1e1e1e">Plastic bags still</text><text x="360" y="63" text-anchor="middle" style="fill:#1e1e1e">handed out</text>
+          <rect x="500" y="150" width="200" height="56" rx="12" fill="#dcfce7" stroke="#16a34a" stroke-width="2"/>
+          <text x="600" y="174" text-anchor="middle" style="fill:#1e1e1e">Advocate complaints</text><text x="600" y="193" text-anchor="middle" style="fill:#1e1e1e">&amp; reports to DEC</text>
+          <rect x="250" y="284" width="220" height="56" rx="12" fill="#dbeafe" stroke="#2f7fd6" stroke-width="2"/>
+          <text x="360" y="308" text-anchor="middle" style="fill:#1e1e1e">DEC inspections,</text><text x="360" y="327" text-anchor="middle" style="fill:#1e1e1e">warnings &amp; fines</text>
+          <rect x="20" y="150" width="200" height="56" rx="12" fill="#dbeafe" stroke="#2f7fd6" stroke-width="2"/>
+          <text x="120" y="174" text-anchor="middle" style="fill:#1e1e1e">Expected cost of</text><text x="120" y="193" text-anchor="middle" style="fill:#1e1e1e">breaking the rule</text>
+        </g>
+        <g fill="none" stroke="#7c3aed" stroke-width="2.5">
+          <path d="M470 60 Q590 70 600 146" marker-end="url(#la)"/>
+          <path d="M600 210 Q590 290 474 310" marker-end="url(#la)"/>
+          <path d="M250 310 Q130 290 120 210" marker-end="url(#la)"/>
+          <path d="M120 146 Q130 70 246 56" marker-end="url(#la)"/>
+        </g>
+        <g font-size="26" font-weight="700" style="fill:#7c3aed">
+          <text x="580" y="98">+</text><text x="578" y="276">+</text><text x="124" y="276">+</text><text x="126" y="100">–</text>
+        </g>
+        <circle cx="360" cy="180" r="34" fill="none" stroke="#7c3aed" stroke-width="2"/>
+        <text x="360" y="187" text-anchor="middle" font-size="22" font-weight="700" style="fill:#7c3aed">B</text>
+        <g font-size="13">
+          <text x="360" y="246" text-anchor="middle">Limited DEC staff</text>
+          <text x="360" y="263" text-anchor="middle">slows this link (–)</text>
+          <text x="360" y="114" text-anchor="middle">Paper bags cost ~8×</text>
+          <text x="360" y="131" text-anchor="middle">more, pushing plastic up (+)</text>
+        </g>
+        <path d="M360 236 L360 280" stroke="#dc2626" stroke-width="2" stroke-dasharray="5 4" marker-end="url(#lr)" fill="none"/>
+        <path d="M360 100 L360 80" stroke="#dc2626" stroke-width="2" stroke-dasharray="5 4" marker-end="url(#lr)" fill="none"/>
+      </svg></div>
+      <figcaption><b>Figure 9. Causal loop diagram of enforcement.</b> "+" means the next box moves in the same direction; "–" means the opposite. The B marks a balancing loop. Red dashed arrows are outside pressures.
+        <span class="credit">Diagram by the author, based on New York Focus (2022) and DEC enforcement figures.</span></figcaption>
+    </figure>
+    <figure class="card chart">
+      <h4>Figure 10. DEC enforcement funnel, March 2020 – September 2022</h4>
+      <div class="sub">Each step narrows: few visits, fewer warnings, very few penalties</div>
+      <div class="bars" data-max="425">
+        <div class="bar-row"><span>Store visits</span><div class="bar"><span data-v="425"></span></div><span class="v">425</span></div>
+        <div class="bar-row"><span>Warning notices</span><div class="bar"><span data-v="151"></span></div><span class="v">151</span></div>
+        <div class="bar-row"><span>Further actions</span><div class="bar"><span data-v="26" style="background:var(--conflict)"></span></div><span class="v">26</span></div>
+      </div>
+      <figcaption>Of the 26 further actions (notices of violation and consent orders), 17 targeted chains and 9 small businesses. Total fines were about $75,000 statewide over roughly two and a half years.
+        <span class="credit">Source: NYS DEC figures reported in New York Focus, Oct. 12, 2022. Chart by the author.</span></figcaption>
+    </figure>
+
+    <div class="tension">
+      <div class="tag" style="color:var(--informal)">Synergy · Fee + free bags + habit</div>
+      <h3>When formal and informal rules pull the same way</h3>
+      <p>The 5¢ fee only works on a shopper who notices it, and it works best when there is an easy alternative. The law routes 2¢ of every fee to buying reusable bags for low-income residents, and exempts SNAP and WIC users from the fee itself. Over time, carrying a tote became the informal norm: by 2025, 85% of New Yorkers said they usually bring one. Here the formal price signal and the informal peer expectation reinforce each other instead of conflicting.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============ SECTION 4 ============ -->
+<section id="reflection">
+  <div class="wrap reveal">
+    <div class="secnum">Section 4 · Reflection and Systems Thinking</div>
+    <h2>What the bag ban taught me about institutions</h2>
+    <div class="reflect" id="reflect-text">
+      <p>The clearest pattern I noticed is that a formal rule only works where informal institutions already point the same way, or where enforcement is strong enough to override them. Supermarket chains complied quickly because their internal compliance culture treats a state law as non-negotiable. Bodegas did not, because their informal network weighed an eight-fold jump in bag costs against a fine that rarely came. The same law produced two very different behaviors.</p>
+      <p>Institutional structures shape individual action mostly by changing what a choice costs at the moment it is made. The 5¢ fee is tiny, but it appears at the register, right when a shopper decides. The fine is much larger, but it is distant and uncertain for a store owner. Collective action works the same way: advocates became the enforcement system the state could not fully staff, and their complaints are what made the feedback loop turn.</p>
+      <p>I also noticed that the institutions changed each other over time. The state blocked New York City's fee in 2017, then adopted a statewide ban two years later but handed the fee decision back to localities, producing a patchwork map.</p>
+      <p>I see three leverage points. First, close the cost gap for small stores, for example by letting them keep part of the paper fee or by buying paper in bulk through the business associations they already trust. Second, make enforcement less dependent on volunteers by funding DEC inspections in the neighborhoods with the most complaints. Third, invest in the habit itself, since a shopper who always carries a bag no longer needs any rule at all.</p>
+    </div>
+    <div class="wc" id="wc"></div>
+    <div class="lev">
+      <div><b>Leverage point 1 · Incentives:</b> let small stores keep part of the fee, or pool paper-bag purchasing through bodega associations.</div>
+      <div><b>Leverage point 2 · Information flows:</b> fund DEC inspections targeted by complaint data, so the balancing loop runs faster.</div>
+      <div><b>Leverage point 3 · Norms:</b> grow the reusable-bag habit with free bag distribution and education in low-compliance neighborhoods.</div>
+    </div>
+  </div>
+</section>
+
+<section id="sources">
+  <div class="wrap">
+    <div class="secnum">Sources</div>
+    <h2>References and image credits</h2>
+    <ol class="refs">
+      <li>New York State Department of Environmental Conservation. "Bag Waste Reduction Law." <a href="https://dec.ny.gov/environmental-protection/recycling-composting/bag-waste-reduction-law">dec.ny.gov/environmental-protection/recycling-composting/bag-waste-reduction-law</a></li>
+      <li>New York State Department of Environmental Conservation (2018). <i>New York State Plastic Bag Task Force Report: An Analysis of the Impact of Single-Use Plastic Bags.</i> <a href="https://extapps.dec.ny.gov/docs/materials_minerals_pdf/dplasticbagreport2017.pdf">extapps.dec.ny.gov/docs/materials_minerals_pdf/dplasticbagreport2017.pdf</a></li>
+      <li>New York State Department of Taxation and Finance (2021). <i>Publication 718-B: Paper Carryout Bag Reduction Fee</i> (rev. 11/21). <a href="https://www.tax.ny.gov/pdf/publications/sales/pub718b.pdf">tax.ny.gov/pdf/publications/sales/pub718b.pdf</a></li>
+      <li>Kinniburgh, C. (2022, Oct. 12). "New York Banned Plastic Bags Two Years Ago. Why Are They Still Everywhere?" <i>New York Focus.</i> <a href="https://nysfocus.com/2022/10/12/plastic-bag-ban-enforcement-dec-family-dollar">nysfocus.com/2022/10/12/plastic-bag-ban-enforcement-dec-family-dollar</a></li>
+      <li>"New York's Plastic Bag Ban Yields Warnings, Minor Fines for Those Flouting Law" (2023, Nov. 16). <i>THE CITY.</i> <a href="https://www.thecityreporter.nyc/2023/11/16/new-york-plastic-bag-ban-flouting/">thecityreporter.nyc/2023/11/16/new-york-plastic-bag-ban-flouting</a></li>
+      <li>"Plastic Bags Still Ubiquitous in NYC Shops Months After Enforcement of Ban Began" (2022, Feb. 10). <i>City Limits.</i> <a href="https://citylimits.org/2022/02/10/plastic-bags-still-ubiquitous-in-nyc-shops-months-after-enforcement-of-ban-began/">citylimits.org/2022/02/10/plastic-bags-still-ubiquitous-in-nyc-shops-months-after-enforcement-of-ban-began</a></li>
+      <li>"Cuomo Blocks City Council's Plastic Bag Fee, Calling It 'Deeply Flawed'" (2017, Feb. 14). <i>CBS New York.</i> <a href="https://www.cbsnews.com/newyork/news/cuomo-blocks-bag-fee/">cbsnews.com/newyork/news/cuomo-blocks-bag-fee</a></li>
+      <li>"New York State's Bag Ban Is Finally Being Enforced" (2020). <i>Grist.</i> <a href="https://grist.org/climate/new-york-states-bag-ban-is-finally-being-enforced/">grist.org/climate/new-york-states-bag-ban-is-finally-being-enforced</a></li>
+      <li>Beyond Plastics. "Over 400 New Yorkers Call on State Officials to Better Enforce the State's Plastic Bag Ban and Bottle Bill." <a href="https://www.beyondplastics.org/press-releases/enforce-nys-bag-ban-bottle-bill">beyondplastics.org/press-releases/enforce-nys-bag-ban-bottle-bill</a></li>
+      <li>"Oneida County Opts Out of Charging Residents Paper-Bag Fee." <i>CNY Business Journal.</i> <a href="https://cnybj.com/oneida-county-opts-out-of-charging-residents-paper-bag-fee/">cnybj.com/oneida-county-opts-out-of-charging-residents-paper-bag-fee</a></li>
+      <li>Meadows, D. (1999). <i>Leverage Points: Places to Intervene in a System.</i> The Sustainability Institute. (Framework for Section 4.)</li>
+    </ol>
+    <h3 style="margin-top:28px">Image credits</h3>
+    <ol class="refs">
+      <li>Hero: "Plastic bag-Litter-001.jpg," NJR ZA, Wikimedia Commons, CC BY-SA 3.0.</li>
+      <li>Figure 2: "2019 New York State Capitol northwest facade, Albany, New York.jpg," Beyond My Ken, Wikimedia Commons, CC BY-SA 4.0.</li>
+      <li>Figure 4: "Blue reusable shopping bag.JPG," TooHotToHandle at English Wikipedia, Wikimedia Commons, CC BY-SA 3.0.</li>
+      <li>Figure 6: "New York State DEC Commissioner Basil Seggos.jpg," Jim Clayton, Wikimedia Commons, CC BY-SA 4.0.</li>
+      <li>Figure 8: "Bodega cat at Heavenly Market IV, 1760 3rd Avenue, 2024-06-27, East Harlem, Manhattan, New York 04.jpg," Deans Charbal, Wikimedia Commons, CC BY-SA 4.0.</li>
+      <li>Figures 1, 3, 5, 7, 9, 10: created by the author. Map tiles © OpenStreetMap contributors.</li>
+    </ol>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">Built by Chris Ho for Activity 1.3, Institutions and Human Behavior, Oregon State University.</div>
+</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+<script>
+// ---------- Leaflet map ----------
+(function(){
+  if (!window.L) return;
+  const map = L.map('map', {scrollWheelZoom:false}).setView([41.9, -74.9], 7);
+  L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    attribution:'&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+    maxZoom:18
+  }).addTo(map);
+  const pts = [
+    ['New York City (5 boroughs)', 40.7128, -74.0060, 'in', 'Fee since Mar 1, 2020. NYC had tried its own fee in 2017 but the state blocked it.'],
+    ['Suffolk County', 40.88, -72.80, 'in', 'Fee since Mar 1, 2020. Already charged 5¢ on all carryout bags since 2018.'],
+    ['Tompkins County (Ithaca)', 42.444, -76.5019, 'in', 'Fee since Mar 1, 2020. Legislature voted unanimously to opt in.'],
+    ['Troy (city)', 42.7284, -73.6918, 'in', 'Fee since Jun 1, 2020.'],
+    ['White Plains (city)', 41.034, -73.7629, 'in', 'Fee since Jun 1, 2020.'],
+    ['Albany County', 42.60, -73.97, 'in', 'Fee since Dec 1, 2020.'],
+    ['New Rochelle (city)', 40.9115, -73.7824, 'in', 'Fee since Dec 1, 2021.'],
+    ['Nassau County', 40.73, -73.59, 'out', 'Opted out: no paper-bag fee, even though neighbors NYC and Suffolk charge one.'],
+    ['Oneida County', 43.24, -75.43, 'out', 'Opted out: the county executive called the fee "yet another state tax."'],
+    ['State Capitol &amp; DEC headquarters, Albany', 42.6527, -73.7573, 'gov', 'The legislature wrote the ban; DEC (625 Broadway) enforces it statewide.']
+  ];
+  const col = {in:'#16a34a', out:'#9ca3af', gov:'#2f7fd6'};
+  pts.forEach(([n,lat,lng,k,txt]) => {
+    L.circleMarker([lat,lng], {radius: k==='gov'?9:11, color:'#fff', weight:2, fillColor:col[k], fillOpacity:.95})
+      .addTo(map).bindPopup('<b>'+n+'</b><br>'+txt);
+  });
+})();
+
+// ---------- Concept map callouts ----------
+const NODES = [
+  ['formal','NYS DEC (enforcer)','DEC turns the law into a real cost. A store first gets a written warning, then $250, then $500 per violation. Because DEC visits relatively few stores, owners discount the fine by how unlikely an inspection seems. That is why enforcement capacity, not the size of the fine, drives compliance.'],
+  ['formal','Bag Waste Reduction Law (2020)','The core formal rule. It removes plastic film bags from the default checkout options, so stores must decide what to offer instead. It also assigns DEC to enforce and lets localities choose the paper fee, splitting authority across levels of government.'],
+  ['formal','5¢ paper-bag fee (local option)','A small price at the moment of choice. It nudges shoppers to bring their own bag instead of paying, while SNAP and WIC shoppers are exempt to avoid hitting low-income households. Only 7 jurisdictions opted in, so the nudge depends on where you shop.'],
+  ['formal','Fee revenue rule','3¢ of each fee funds the state Environmental Protection Fund and 2¢ goes to the locality to buy reusable bags, prioritizing low- and fixed-income communities. This connects the formal rule to the informal reusable-bag habit by handing out the alternative for free.'],
+  ['informal','Environmental advocates & volunteer monitors','Groups like Beyond Plastics and NYPIRG photograph stores still handing out plastic and send lists to DEC. They act as an informal enforcement network, and their complaints are what trigger many DEC visits (the feedback loop).'],
+  ['behav','Store owners & bodegas','Stores choose to switch to paper, mix paper and plastic, or keep plastic. The choice reflects formal pressure (fines) against informal pressure (costs and what neighboring stores do). Large chains mostly switched; many small stores did not.'],
+  ['behav','Shoppers','Shoppers bring a reusable bag, pay 5¢, or ask for plastic where it is still offered. Each choice is small, but billions of them make up the outcome. The habit of carrying a bag is what makes the ban stick without enforcement.'],
+  ['behav','Outcome: fewer bags, uneven compliance','Bag use fell overall and 85% of residents now usually bring a reusable bag, but plastic persists in many NYC bodegas and some chains. The uneven result traces back to where formal and informal institutions clash.'],
+  ['informal','Bodega & small-business networks','Owners share suppliers, prices and risk tolerance. With 400 paper bags costing about $50–55 versus about $12 for twice as many plastic bags, the network norm became "keep plastic and risk the fine." The red dashed arrow shows this informal pressure conflicting with the formal ban.'],
+  ['informal','Customer norm: bags should be free','Decades of free plastic bags made a free bag feel like part of any purchase. Customers who expect one pressure store owners to keep handing out plastic, and some resist paying the 5¢. This norm works against the ban.'],
+  ['informal','Reusable-bag habit & peer expectation','Once enough people carry totes, bringing one becomes the expected thing to do, and forgetting feels awkward. This informal norm reinforces the formal fee instead of fighting it, which is the synergy discussed in Section 3.'],
+  ['loop','Feedback loop','Weak enforcement lets plastic persist, which produces complaints from advocates, which prompts DEC to act, which reduces plastic. It is a balancing loop, but it runs only as fast as volunteer attention and DEC staffing allow.']
+];
+const tagName = {formal:'Formal institution', informal:'Informal institution', behav:'Behavior / outcome', loop:'Feedback loop'};
+const tagCls = {formal:'t-formal', informal:'t-informal', behav:'t-behav', loop:'t-loop'};
+const svg = document.querySelector('.cmap');
+const out = document.getElementById('callout');
+function select(g){
+  svg.querySelectorAll('.node').forEach(n=>n.classList.toggle('sel', n===g));
+  svg.classList.add('dim');
+  const [k,t,p] = NODES[+g.dataset.node];
+  out.innerHTML = '<span class="tag '+tagCls[k]+'">'+tagName[k]+'</span><h3>'+t+'</h3><p>'+p+'</p>';
+  if (window.matchMedia('(max-width:860px)').matches) out.scrollIntoView({behavior:'smooth', block:'nearest'});
+}
+svg.querySelectorAll('.node').forEach(g=>{
+  g.setAttribute('aria-label', NODES[+g.dataset.node][1]);
+  g.addEventListener('click', ()=>select(g));
+  g.addEventListener('keydown', e=>{ if(e.key==='Enter'||e.key===' '){ e.preventDefault(); select(g);} });
+});
+
+// ---------- word count ----------
+const words = document.getElementById('reflect-text').innerText.trim().split(/\s+/).length;
+document.getElementById('wc').textContent = 'Reflection: ' + words + ' words';
+
+// ---------- reveal + bars ----------
+const io = new IntersectionObserver(es=>es.forEach(e=>{
+  if(!e.isIntersecting) return;
+  e.target.classList.add('in');
+  e.target.querySelectorAll('.bars').forEach(b=>{
+    const max = +b.dataset.max;
+    b.querySelectorAll('[data-v]').forEach(s=>s.style.width = (100*s.dataset.v/max)+'%');
+  });
+  io.unobserve(e.target);
+}), {threshold:.12});
+document.querySelectorAll('.reveal, .chart').forEach(el=>io.observe(el));
+
+// ---------- active nav ----------
+const links = [...document.querySelectorAll('nav.top a[href^="#"]:not(.brand)')];
+const so = new IntersectionObserver(es=>es.forEach(e=>{
+  if(e.isIntersecting) links.forEach(a=>a.classList.toggle('on', a.getAttribute('href')==='#'+e.target.id));
+}), {rootMargin:'-45% 0px -50% 0px'});
+document.querySelectorAll('section[id]').forEach(s=>so.observe(s));
+</script>
+</body>
+</html>

@@ -1,0 +1,88 @@
+<svg class="cmap" viewBox="-20 150 1230 710" role="img" aria-labelledby="cmap-title cmap-desc">
+<title id="cmap-title">Concept map: Plastic Bag Ban in New York State</title><desc id="cmap-desc">Formal institutions (left column) and informal institutions (right column) push on store-owner and shopper behavior (middle column), which adds up to the outcome: fewer bags overall but uneven compliance. A purple dashed feedback loop runs from the outcome back to advocates who complain to the DEC.</desc>
+<defs><marker id="ah-1e1e1e" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#1e1e1e"/></marker><marker id="ah-22c55e" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#22c55e"/></marker><marker id="ah-ef4444" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#ef4444"/></marker><marker id="ah-8b5cf6" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#8b5cf6"/></marker></defs>
+<polyline class="edge" points="450,225 300,225" fill="none" stroke="#22c55e" stroke-width="2.5" marker-end="url(#ah-22c55e)"/>
+<polyline class="edge" points="150,330 150,280" fill="none" stroke="#1e1e1e" stroke-width="2.5" marker-end="url(#ah-1e1e1e)"/>
+<polyline class="edge" points="300,385 450,385" fill="none" stroke="#1e1e1e" stroke-width="2.5" marker-end="url(#ah-1e1e1e)"/>
+<polyline class="edge" points="300,260 450,350" fill="none" stroke="#1e1e1e" stroke-width="2.5" marker-end="url(#ah-1e1e1e)"/>
+<polyline class="edge" points="300,545 450,545" fill="none" stroke="#1e1e1e" stroke-width="2.5" marker-end="url(#ah-1e1e1e)"/>
+<polyline class="edge" points="300,690 450,580" fill="none" stroke="#22c55e" stroke-width="2.5" marker-end="url(#ah-22c55e)"/>
+<polyline class="edge" points="600,440 600,490" fill="none" stroke="#1e1e1e" stroke-width="2.5" marker-end="url(#ah-1e1e1e)"/>
+<polyline class="edge" points="600,600 600,650" fill="none" stroke="#1e1e1e" stroke-width="2.5" marker-end="url(#ah-1e1e1e)"/>
+<polyline class="edge" points="900,385 750,385" fill="none" stroke="#ef4444" stroke-width="2.5" stroke-dasharray="8 6" marker-end="url(#ah-ef4444)"/>
+<polyline class="edge" points="900,545 750,545" fill="none" stroke="#22c55e" stroke-width="2.5" marker-end="url(#ah-22c55e)"/>
+<polyline class="edge" points="900,260 750,350" fill="none" stroke="#22c55e" stroke-width="2.5" marker-end="url(#ah-22c55e)"/>
+<polyline class="edge" points="750,705 820,705 820,225 750,225" fill="none" stroke="#8b5cf6" stroke-width="2.5" stroke-dasharray="8 6" marker-end="url(#ah-8b5cf6)"/>
+<g class="node" tabindex="0" role="button" data-node="0"><rect x="0" y="170" width="300" height="110" rx="14" fill="#a5d8ff" stroke="#4a9eed" stroke-width="2"/>
+<text class="nt" text-anchor="middle" dominant-baseline="middle" font-size="16"><tspan x="150.0" y="205.0">[FORMAL] NYS DEC</tspan><tspan x="150.0" y="225.0">enforces the ban:</tspan><tspan x="150.0" y="245.0">warning, then $250+ fines</tspan></text>
+</g>
+<g class="node" tabindex="0" role="button" data-node="1"><rect x="0" y="330" width="300" height="110" rx="14" fill="#a5d8ff" stroke="#4a9eed" stroke-width="2"/>
+<text class="nt" text-anchor="middle" dominant-baseline="middle" font-size="16"><tspan x="150.0" y="365.0">[FORMAL] NY Bag Waste</tspan><tspan x="150.0" y="385.0">Reduction Law (2020)</tspan><tspan x="150.0" y="405.0">bans plastic checkout bags</tspan></text>
+</g>
+<g class="node" tabindex="0" role="button" data-node="2"><rect x="0" y="490" width="300" height="110" rx="14" fill="#a5d8ff" stroke="#4a9eed" stroke-width="2"/>
+<text class="nt" text-anchor="middle" dominant-baseline="middle" font-size="16"><tspan x="150.0" y="525.0">[FORMAL] 5¢ paper-bag fee</tspan><tspan x="150.0" y="545.0">(local option);</tspan><tspan x="150.0" y="565.0">SNAP shoppers exempt</tspan></text>
+</g>
+<g class="node" tabindex="0" role="button" data-node="3"><rect x="0" y="650" width="300" height="110" rx="14" fill="#a5d8ff" stroke="#4a9eed" stroke-width="2"/>
+<text class="nt" text-anchor="middle" dominant-baseline="middle" font-size="16"><tspan x="150.0" y="685.0">[FORMAL] Fee revenue rule:</tspan><tspan x="150.0" y="705.0">Env. Protection Fund +</tspan><tspan x="150.0" y="725.0">free reusable bags</tspan></text>
+</g>
+<g class="node" tabindex="0" role="button" data-node="4"><rect x="450" y="170" width="300" height="110" rx="14" fill="#b2f2bb" stroke="#22c55e" stroke-width="2"/>
+<text class="nt" text-anchor="middle" dominant-baseline="middle" font-size="16"><tspan x="600.0" y="205.0">[INFORMAL] Environmental</tspan><tspan x="600.0" y="225.0">advocates &amp; volunteer</tspan><tspan x="600.0" y="245.0">monitors</tspan></text>
+</g>
+<g class="node" tabindex="0" role="button" data-node="5"><rect x="450" y="330" width="300" height="110" rx="14" fill="#fff3bf" stroke="#f59e0b" stroke-width="2"/>
+<text class="nt" text-anchor="middle" dominant-baseline="middle" font-size="16"><tspan x="600.0" y="365.0">BEHAVIOR: Store owners</tspan><tspan x="600.0" y="385.0">&amp; bodegas switch to paper,</tspan><tspan x="600.0" y="405.0">mix, or keep plastic</tspan></text>
+</g>
+<g class="node" tabindex="0" role="button" data-node="6"><rect x="450" y="490" width="300" height="110" rx="14" fill="#fff3bf" stroke="#f59e0b" stroke-width="2"/>
+<text class="nt" text-anchor="middle" dominant-baseline="middle" font-size="16"><tspan x="600.0" y="525.0">BEHAVIOR: Shoppers bring</tspan><tspan x="600.0" y="545.0">a reusable bag, pay 5¢,</tspan><tspan x="600.0" y="565.0">or ask for plastic</tspan></text>
+</g>
+<g class="node" tabindex="0" role="button" data-node="7"><rect x="450" y="650" width="300" height="110" rx="14" fill="#ffd8a8" stroke="#f59e0b" stroke-width="2"/>
+<text class="nt" text-anchor="middle" dominant-baseline="middle" font-size="16"><tspan x="600.0" y="695.0">OUTCOME: fewer bags overall</tspan><tspan x="600.0" y="715.0">but uneven compliance</tspan></text>
+</g>
+<g class="node" tabindex="0" role="button" data-node="8"><rect x="900" y="170" width="290" height="110" rx="14" fill="#b2f2bb" stroke="#22c55e" stroke-width="2"/>
+<text class="nt" text-anchor="middle" dominant-baseline="middle" font-size="16"><tspan x="1045.0" y="195.0">[INFORMAL] Bodega &amp;</tspan><tspan x="1045.0" y="215.0">small-business owner</tspan><tspan x="1045.0" y="235.0">networks (400 paper bags</tspan><tspan x="1045.0" y="255.0">cost about $50-55)</tspan></text>
+</g>
+<g class="node" tabindex="0" role="button" data-node="9"><rect x="900" y="330" width="290" height="110" rx="14" fill="#b2f2bb" stroke="#22c55e" stroke-width="2"/>
+<text class="nt" text-anchor="middle" dominant-baseline="middle" font-size="16"><tspan x="1045.0" y="365.0">[INFORMAL] Customer norm:</tspan><tspan x="1045.0" y="385.0">bags should be free</tspan><tspan x="1045.0" y="405.0">and convenient</tspan></text>
+</g>
+<g class="node" tabindex="0" role="button" data-node="10"><rect x="900" y="490" width="290" height="110" rx="14" fill="#b2f2bb" stroke="#22c55e" stroke-width="2"/>
+<text class="nt" text-anchor="middle" dominant-baseline="middle" font-size="16"><tspan x="1045.0" y="525.0">[INFORMAL] Reusable-bag</tspan><tspan x="1045.0" y="545.0">habit &amp; peer</tspan><tspan x="1045.0" y="565.0">expectations</tspan></text>
+</g>
+<g class="node" tabindex="0" role="button" data-node="11"><rect x="900" y="650" width="290" height="110" rx="14" fill="#eebefa" stroke="#8b5cf6" stroke-width="2"/>
+<text class="nt" text-anchor="middle" dominant-baseline="middle" font-size="16"><tspan x="1045.0" y="675.0">FEEDBACK LOOP</tspan><tspan x="1045.0" y="695.0">weak enforcement →</tspan><tspan x="1045.0" y="715.0">plastic persists →</tspan><tspan x="1045.0" y="735.0">complaints → DEC acts</tspan></text>
+</g>
+<g class="legend"><rect x="0" y="810" width="270" height="40" rx="14" fill="#a5d8ff" stroke="#4a9eed" stroke-width="2"/>
+<text class="nt" text-anchor="middle" dominant-baseline="middle" font-size="16"><tspan x="135.0" y="830.0">Formal institution</tspan></text>
+</g>
+<g class="legend"><rect x="300" y="810" width="270" height="40" rx="14" fill="#b2f2bb" stroke="#22c55e" stroke-width="2"/>
+<text class="nt" text-anchor="middle" dominant-baseline="middle" font-size="16"><tspan x="435.0" y="830.0">Informal institution</tspan></text>
+</g>
+<g class="legend"><rect x="600" y="810" width="270" height="40" rx="14" fill="#fff3bf" stroke="#f59e0b" stroke-width="2"/>
+<text class="nt" text-anchor="middle" dominant-baseline="middle" font-size="16"><tspan x="735.0" y="830.0">Behavior</tspan></text>
+</g>
+<g class="legend"><rect x="900" y="810" width="270" height="40" rx="14" fill="#ffd8a8" stroke="#f59e0b" stroke-width="2"/>
+<text class="nt" text-anchor="middle" dominant-baseline="middle" font-size="16"><tspan x="1035.0" y="830.0">Outcome</tspan></text>
+</g>
+<rect class="lblbg" x="325.0" y="212.5" width="100.0" height="25" rx="5"/>
+<text class="el" text-anchor="middle" dominant-baseline="middle" font-size="15"><tspan x="375.0" y="225.0">complaints</tspan></text>
+<rect class="lblbg" x="113.19999999999999" y="292.5" width="73.60000000000001" height="25" rx="5"/>
+<text class="el" text-anchor="middle" dominant-baseline="middle" font-size="15"><tspan x="150.0" y="305.0">assigns</tspan></text>
+<rect class="lblbg" x="307.4" y="372.5" width="135.20000000000002" height="25" rx="5"/>
+<text class="el" text-anchor="middle" dominant-baseline="middle" font-size="15"><tspan x="375.0" y="385.0">bans film bags</tspan></text>
+<rect class="lblbg" x="347.0" y="292.5" width="56.0" height="25" rx="5"/>
+<text class="el" text-anchor="middle" dominant-baseline="middle" font-size="15"><tspan x="375.0" y="305.0">fines</tspan></text>
+<rect class="lblbg" x="342.6" y="532.5" width="64.80000000000001" height="25" rx="5"/>
+<text class="el" text-anchor="middle" dominant-baseline="middle" font-size="15"><tspan x="375.0" y="545.0">5¢ fee</tspan></text>
+<rect class="lblbg" x="329.4" y="622.5" width="91.2" height="25" rx="5"/>
+<text class="el" text-anchor="middle" dominant-baseline="middle" font-size="15"><tspan x="375.0" y="635.0">free bags</tspan></text>
+<rect class="lblbg" x="550.0" y="452.5" width="100.0" height="25" rx="5"/>
+<text class="el" text-anchor="middle" dominant-baseline="middle" font-size="15"><tspan x="600.0" y="465.0">cost / fee</tspan></text>
+<rect class="lblbg" x="532.4" y="612.5" width="135.20000000000002" height="25" rx="5"/>
+<text class="el" text-anchor="middle" dominant-baseline="middle" font-size="15"><tspan x="600.0" y="625.0">choices add up</tspan></text>
+<rect class="lblbg" x="783.8" y="372.5" width="82.4" height="25" rx="5"/>
+<text class="el" text-anchor="middle" dominant-baseline="middle" font-size="15"><tspan x="825.0" y="385.0">pressure</tspan></text>
+<rect class="lblbg" x="779.4" y="532.5" width="91.2" height="25" rx="5"/>
+<text class="el" text-anchor="middle" dominant-baseline="middle" font-size="15"><tspan x="825.0" y="545.0">peer norm</tspan></text>
+<rect class="lblbg" x="753.0" y="292.5" width="144.0" height="25" rx="5"/>
+<text class="el" text-anchor="middle" dominant-baseline="middle" font-size="15"><tspan x="825.0" y="305.0">cost complaints</tspan></text>
+<rect class="lblbg" x="772.0" y="443.0" width="100.0" height="44" rx="5"/>
+<text class="el" text-anchor="middle" dominant-baseline="middle" font-size="15"><tspan x="822.0" y="455.5">feedback:</tspan><tspan x="822.0" y="474.5">complaints</tspan></text>
+</svg>
